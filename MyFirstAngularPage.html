@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+
+<body>
+    <h1>Just do as you're told</h1>
+    <h2>Put your name in the box, or so help me God</h2>
+    <div ng-app ng-init="itineraries=['October 2017 Business Development Trip', 'November 2017 Client-site visit', 'January 2018 Scoping Visit', 'May2018 Recruitment Visit', 'July 2018 Conversion visit', 'August 2018 Holiday to Cayman Islands']">
+        <p>Name: <input type="text" ng-model="name"></p>
+
+        <p> Hello {{name}} </p>
+
+        <p>I'm looking for: <input type="text" ng-model="search"</p>
+
+        <h2>Here's what's on you ungrateful swine</h2>
+    <ol>
+        <li ng-repeat="itinerary in itineraries| filter:search">
+            {{itinerary}}
+        </li>
+
+        </ol>
+    </div>
+
+</body>
+</html>
