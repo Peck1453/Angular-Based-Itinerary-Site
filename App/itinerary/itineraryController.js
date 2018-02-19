@@ -1,69 +1,49 @@
 ﻿angular.module("itsItinerary").controller("itineraryController", function ($scope, $http) {
     $scope.isEditing = false;
+    $scope.isUpdating = false;
+    $scope.showAll = false;
+    var itinId;
 
 
+    //initialisation if Itinerary List
 
 
-    //$scope.itineraries = [
-    //    {
-    //        id: 1,
-    //        itiName: "October Business Development trip 2015",
-    //        destination: "Germany",
-    //        purpose: "Work",
-    //        startDate: new Date("2015-10-03"),
-    //        endDate: new Date("2015-10-10")
-    //    },
-    //    {
-    //        id: 2,
-    //        itiName: "November Client-site visit 2015",
-    //        destination: "America",
-    //        purpose: "Work",
-    //        startDate: new Date("2015-11-05"),
-    //        endDate: new Date("2015-11-08")
-    //    },
-    //    {
-    //        id: 3,
-    //        itiName: "January Scoping visit 2016",
-    //        destination: "China",
-    //        purpose: "Work",
-    //        startDate: new Date("2016-01-15"),
-    //        endDate: new Date("2016-01-23")
-    //    },
-    //    {
-    //        id: 4,
-    //        itiName: "May Recruitment visit 2016",
-    //        destination: "India",
-    //        purpose: "Work",
-    //        startDate: new Date("2016-05-21"),
-    //        endDate: new Date("2016-05-30")
-    //    },
-    //    {
-    //        id: 5,
-    //        itiName: "July Conversion visit 2016",
-    //        destination: "Germany",
-    //        purpose: "Work",
-    //        startDate: new Date("2016-07-08"),
-    //        endDate: new Date("2015-07-15")
-    //    }];
+    $scope.init = function () {
 
+        $http.get("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its")
+            .success(function (response) {
+                $scope.itineraries = response;
+            })
+            .error(function (error) {
+                $scope.errorMessage = error;
+            });
+    }
+
+
+    // Adding Itinerary to Database
 
     $scope.add = function () {
         var itineraryDetails = {
-            id: $scope.itineraries.length + 1,
+            //id: $scope.itineraries.length + 1,
             itiName: $scope.itineraryName,
             destination: $scope.itineraryDestination,
             purpose: $scope.itineraryPurpose,
             startDate: new Date($scope.itineraryStartDate),
             endDate: new Date($scope.itineraryEndDate)
-        };
+        }
+        $http.post("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/", itineraryDetails)
 
 
+            .success(function () {
+                $scope.isEditing = false,
+                $scope.init();
+            })
 
-        $scope.itineraries.push(itineraryDetails);
-        $scope.isEditing = false;
+            .error(function (error) {
+                $scope.errorMessage = error;
+            });
+    }
 
-
-    };
 
 
     $scope.beginEditing = function () {
@@ -77,26 +57,93 @@
         $scope.itineraryName = "";
     };
 
+    // Delete Itinerary
 
     $scope.remove = function (itineraryId) {
-        var itineraryToRemove = $scope.itineraries.indexOf(itineraryId);
-        $scope.itineraries.splice(itineraryToRemove, 1);
-        $scope.isEditing = false;
-
-
-
-
-
-    }
-    $scope.init = function () {
-
-        $http.get("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/")
-            .success(function (response) {
-                $scope.itineraries = response;
+        $http.delete("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/" + itineraryId)
+            .success(function () {
+                $scope.init();
             })
             .error(function (error) {
                 $scope.errorMessage = error;
             });
+    }
+        // Edit Itinerary- Part 1
+
+    $scope.displayEditItinerary = function (itineraryId) {
+        $scope.isUpdating = true;
+        $http.get("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/" + itineraryId)
+
+            .success(function (response) {
+                $scope.editItineraryName = response.itiName;
+                $scope.editItineraryDestination = response.destination;
+                $scope.editItineraryPurpose = response.purpose;
+                $scope.editItineraryStartDate = response.startDate;
+                $scope.editItineraryEndDate = response.endDate;
+
+                itinId = response.Id;
+            })
+            .error(function (error) {
+                $scope.errorMessage = error;
+            });
+    }
+
+    //Edit Itinerary Part 2
+
+    $scope.edit = function (Itinerary) {
+        var editItineraryItem = {
+            Id: itinId,
+            itiName: $scope.editItineraryName,  //should use Itinerary as $
+            destination: $scope.editItineraryDestination,
+            purpose: $scope.editItineraryPurpose,
+            startDate: new Date($scope.editItineraryStartDate),
+            EndDate: new Date($scope.editItineraryStartDate),
+        };
+
+        $http.put("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/", editItineraryItem)
+            .success(function (){
+            $scope.isUpdating = false
+            $scope.init;
+            })
+            .error(function (error) {
+                $scope.errorMessage = error;
+            });
+
+    }
+
+    $scope.cancelEdit = function () {
+
+        $scope.isUpdating = false;
+        $scope.itineraryName = "";
+        $scope.ItineraryDestination = "";
+        $scope.itineraryPurpose = "";
+    }
+
+
+
+    //Details of selected Itinerary
+
+    $scope.details = function (itineraryId)
+    {
+        $scope.itineraries = [];
+        $http.get("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/" + itineraryId)
+            .success(function (response) {
+                $scope.itineraries[0] = response;
+            })
+            .error(function (error) {
+                $scope.errorMessage = error;
+            });
+        $scope.showAll = true;
+
+
+
+    }
+
+    $scope.hideShowAll = function ()
+    {
+        
+        $scope.showAll = false;
+        $scope.init()
     }
 
     $scope.init();

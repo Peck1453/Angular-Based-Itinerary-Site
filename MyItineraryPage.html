@@ -10,36 +10,83 @@
         <p>
             Here are your current itineraries
             <table>
-                <th>Itinerary Name</th>
-                <th>Destination</th>
-                <th>Purpose</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Delete?</th>
+                <tr>
+                    <th>Itinerary Name</th>
+                    <th>Destination</th>
+                    <th>Purpose</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Details</th>
+                    <th>Delete?</th>
+                </tr>
                 <tr ng-repeat="itinerary in itineraries | filter:search">
                     <td>{{itinerary.itiName}}</td>
                     <td>{{itinerary.destination}}</td>
                     <td>{{itinerary.purpose}}</td>
                     <td>{{itinerary.startDate | date}}</td>
                     <td>{{itinerary.endDate | date}}</td>
-                    <td><a href="" ng-click="remove()">Delete</a></td>
+                    <td><a href="" ng-click="details(itinerary.Id)">Details</a></td>
+                    <td><a href="" ng-click="displayEditItinerary(itinerary.Id)">Edit</a></td>
+                    <td><a href="" ng-click="remove(itinerary.Id)">Delete</a></td>
 
                 </tr>
             </table>
             <button ng-click="beginEditing()">Add *New* Itinerary</button>
         </p>
+
     </div>
     <div ng-show="isEditing">
         <h2>Add Itinerary</h2>
-        <label>Itinerary Name: <input ng-model="itineraryName" /></label><br />
-        <label>Itinerary Destination: <input ng-model="itineraryDestination" /></label><br />
-        <label>Itinerary Purpose: <input ng-model="itineraryPurpose" /></label><br />
-        <label>Itinerary Start Date: <input ng-model="itineraryStartDate" /></label><br />
-        <label>Itinerary End Date: <input ng-model="itineraryEndDate" /></label><br />
-        <button ng-click="add()">Add</button><button ng-click="cancelAddition()">Cancel</button>
+        <form name="addForm">
+            <label>Itinerary Name: <input name="itineraryName" type="text" ng-model="itineraryName" ng-pattern="/^[A-Z][a-z]?$/" required /></label><br />
+            <label>Itinerary Destination: <input name="itineraryDestination" type="text" ng-model="itineraryDestination" ng-pattern="/^[A-Z][a-z]+( [A-Z][a-z]+)?$/" required /></label><br />
+            <label>Itinerary Purpose: <input name="itineraryPurpose" ng-model="itineraryPurpose" ng-pattern="/^[A-Z][a-z]+( [A-Z][a-z]+)?$/" required /></label><br />
+            <label>Itinerary Start Date: <input type="date" ng-model="itineraryStartDate" /></label><br />
+            <label>Itinerary End Date: <input type="date" ng-model="itineraryEndDate" /></label><br />
+            <button ng-disabled="addForm.$invalid" ng-click="add()">Add</button>
+            <button ng-click="cancelAddition()">Cancel</button>
+        </form>
     </div>
+
+    <div ng-show="addForm.itineraryName.$dirty && addForm.itineraryName.$invalid">
+        The Name isn't right, and neither are you <br />
+        <span ng-show="addForm.itineraryName.$error.required">You can't have an Itinerary without a name- how will you know what it is you're doing otherwise?<br />
+        Don't forget Purpose and Destination are Mandatory too</span>
+        <span ng-show="addForm.itineraryName.$error.pattern">Start your fields with Capital Letters, it's good grammar and good pratice</span>
+    </div>
+
+    <div ng-show="addForm.itineraryDestination.$dirty && addForm.itineraryDestination.$invalid">
+        The destination isn't right, and neither are you <br />
+        <span ng-show="addForm.itineraryDestination.$error.required">Where, pray tell, is this Itinerary taking place, or would you rather we didn't know, hmm?</span>
+        <span ng-show="addForm.itineraryDestination.$error.pattern">Start your fields with Capital Letters, it's good grammar and good pratice- in this case start each word with a Capital Letter</span>
+    </div>
+
+    <div ng-show="addForm.itineraryPurpose.$dirty && addForm.itineraryDestination.$invalid">
+        The purpose isn't right, and neither are you <br />
+        <span ng-show="addForm.itineraryPurpose.$error.required">There's no purpose, not merely in this form, but in life in general. Sigh</span>
+        <span ng-show="addForm.itineraryPurpose.$error.pattern">Start your fields with Capital Letters, it's good grammar and good pratice- in this case start each word with a Capital Letter</span>
+    </div>
+
+
     <div ng-show="errorMessage">
         Error: {{errorMessage | json}}
+    </div>
+
+    <div ng-show="isUpdating">
+        <h2>Edit Itinerary</h2>
+        <label>Itinerary Name:<input ng-model="editItineraryName" /></label><br />
+        <label>Itinerary Destination:<input ng-model="editItineraryDestination" /></label><br />
+        <label>Itinerary Purpose:<input ng-model="editItineraryPurpose" /></label><br />
+        <label>Itinerary Start Date:<input type="date" ng-model="editItineraryStartDate" /></label><br />
+        <label>Itinerary End Date:<input type="date" ng-model="editItineraryEndDate" /></label><br />
+        <button ng-click="edit(itinerary)">Edit</button>
+        <button ng-click="cancelEdit()">Cancel</button>
+
+    </div>
+    <div ng-show="showAll">
+
+        <button ng-click="hideShowAll()">Show All</button>
+
     </div>
     <script src="App\MyApp.js"></script>
     <script src="App\itinerary\itineraryModule.js"></script>
