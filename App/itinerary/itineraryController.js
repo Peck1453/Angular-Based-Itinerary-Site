@@ -72,6 +72,7 @@
 
     $scope.displayEditItinerary = function (itineraryId) {
         $scope.isUpdating = true;
+        $scope.addform.$setPristine();
         $http.get("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/" + itineraryId)
 
             .success(function (response) {
