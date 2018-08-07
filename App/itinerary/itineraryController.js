@@ -28,8 +28,8 @@
             itiName: $scope.itineraryName,
             destination: $scope.itineraryDestination,
             purpose: $scope.itineraryPurpose,
-            startDate: new Date($scope.itineraryStartDate),
-            endDate: new Date($scope.itineraryEndDate)
+            startDate: new Date($scope.itineraryStartDate).setHours(15),
+            endDate: new Date($scope.itineraryEndDate).setHours(15),
         }
         $http.post("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/", itineraryDetails)
 
@@ -72,15 +72,15 @@
 
     $scope.displayEditItinerary = function (itineraryId) {
         $scope.isUpdating = true;
-        $scope.addform.$setPristine();
         $http.get("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/" + itineraryId)
 
+
             .success(function (response) {
-                $scope.editItineraryName = response.itiName;
+                $scope.editItineraryName = response.itiName;                    
                 $scope.editItineraryDestination = response.destination;
                 $scope.editItineraryPurpose = response.purpose;
-                $scope.editItineraryStartDate = response.startDate;
-                $scope.editItineraryEndDate = response.endDate;
+                $scope.editItineraryStartDate = new Date(response.startDate);
+                $scope.editItineraryEndDate = new Date(response.endDate);
 
                 itinId = response.Id;
             })
@@ -91,20 +91,21 @@
 
     //Edit Itinerary Part 2
 
-    $scope.edit = function (Itinerary) {
+    $scope.edit = function (itinerary) {
         var editItineraryItem = {
             Id: itinId,
             itiName: $scope.editItineraryName,  //should use Itinerary as $
             destination: $scope.editItineraryDestination,
             purpose: $scope.editItineraryPurpose,
-            startDate: new Date($scope.editItineraryStartDate),
-            EndDate: new Date($scope.editItineraryStartDate),
+            startDate: new Date($scope.editItineraryStartDate).setHours(15),
+            EndDate: new Date($scope.editItineraryEndDate).setHours(15),
         };
 
         $http.put("http://webteach_net.hallam.shu.ac.uk/acesjas/api/its/", editItineraryItem)
             .success(function (){
-            $scope.isUpdating = false
-            $scope.init;
+                $scope.isUpdating = false;
+
+                $scope.init();
             })
             .error(function (error) {
                 $scope.errorMessage = error;

@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html ng-app="itsApp">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+<div>
+    <h2>Login Page</h2>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+        <form name="loginform">
+            Enter Username
+            <input name="username"type="text" ng-model="username" /> <br />
+            Enter Password
+            <input name="password"type="password" ng-model="password" />
+            <button ng-click="login()">Login</button>
+
+
+        </form>
+
+    </body>
+    <script src="App\MyApp.js"></script>
+    <script src="App\itinerary\itineraryModule.js"></script>
+    <script src="App\itinerary\authenticationController.js"></script>
+</div>
+
+</html>

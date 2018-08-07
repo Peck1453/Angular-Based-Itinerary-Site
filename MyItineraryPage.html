@@ -33,14 +33,14 @@
             </table>
             <button ng-click="beginEditing()">Add *New* Itinerary</button>
         </p>
-
+        
     </div>
     <div ng-show="isEditing">
         <h2>Add Itinerary</h2>
         <form name="addForm">
-            <label>Itinerary Name: <input name="itineraryName" type="text" ng-model="itineraryName" ng-pattern="/^[A-Z][a-z]?$/" required /></label><br />
-            <label>Itinerary Destination: <input name="itineraryDestination" type="text" ng-model="itineraryDestination" ng-pattern="/^[A-Z][a-z]+( [A-Z][a-z]+)?$/" required /></label><br />
-            <label>Itinerary Purpose: <input name="itineraryPurpose" ng-model="itineraryPurpose" ng-pattern="/^[A-Z][a-z]+( [A-Z][a-z]+)?$/" required /></label><br />
+            <label>Itinerary Name: <input name="itineraryName" type="text" ng-model="itineraryName" required /></label><br />
+            <label>Itinerary Destination: <input name="itineraryDestination" type="text" ng-model="itineraryDestination" required /></label><br />
+            <label>Itinerary Purpose: <input name="itineraryPurpose" type="text" ng-model="itineraryPurpose" /></label><br />
             <label>Itinerary Start Date: <input type="date" ng-model="itineraryStartDate" /></label><br />
             <label>Itinerary End Date: <input type="date" ng-model="itineraryEndDate" /></label><br />
             <button ng-disabled="addForm.$invalid" ng-click="add()">Add</button>
